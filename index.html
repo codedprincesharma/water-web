@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sahilpani wala - Premium Water Customization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 5%;
+            background: rgba(10, 10, 10, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+             background: rgba(10, 10, 10, 0.95);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Product Samples Section */
+        .samples {
+            padding: 100px 5%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+        }
+
+        .samples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .bottle-sample {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 2rem;
+            border-radius: 25px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(50px) rotateY(15deg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bottle-sample::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .bottle-sample:hover::before {
+            left: 100%;
+        }
+
+        .bottle-sample:hover {
+            transform: translateY(-15px) rotateY(0deg) scale(1.02);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 212, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        /* Fallback bottle illustrations using CSS */
+        .bottle-visual {
+            width: 120px;
+            height: 180px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .bottle-body {
+            width: 80px;
+            height: 140px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.8), rgba(0, 153, 204, 0.6));
+            border-radius: 15px 15px 8px 8px;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: inset 5px 5px 10px rgba(255, 255, 255, 0.2),
+                        inset -5px -5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .bottle-neck {
+            width: 25px;
+            height: 30px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.9), rgba(0, 153, 204, 0.7));
+            border-radius: 5px 5px 0 0;
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .bottle-cap {
+            width: 30px;
+            height: 15px;
+            background: linear-gradient(135deg, #333, #555);
+            border-radius: 8px 8px 3px 3px;
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .bottle-label {
+            position: absolute;
+            top: 20px;
+            left: 5px;
+            right: 5px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #0099cc;
+        }
+
+        .bottle-highlight {
+            position: absolute;
+            top: 10px;
+            left: 8px;
+            width: 20px;
+            height: 50px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), transparent);
+            border-radius: 10px;
+        }
+
+        /* Different bottle styles */
+        .wedding-bottle .bottle-body {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.8), rgba(255, 193, 7, 0.6));
+            border-radius: 20px 20px 8px 8px;
+        }
+
+        .wedding-bottle .bottle-label {
+            background: rgba(255, 255, 255, 0.95);
+            color: #d4af37;
+        }
+
+        .corporate-bottle .bottle-body {
+            background: linear-gradient(135deg, rgba(52, 58, 64, 0.9), rgba(73, 80, 87, 0.7));
+            border-radius: 10px 10px 5px 5px;
+        }
+
+        .corporate-bottle .bottle-label {
+            background: rgba(255, 255, 255, 0.95);
+            color: #495057;
+        }
+
+        .party-bottle .bottle-body {
+            background: linear-gradient(135deg, rgba(255, 20, 147, 0.8), rgba(255, 105, 180, 0.6));
+            border-radius: 25px 25px 10px 10px;
+        }
+
+        .party-bottle .bottle-label {
+            background: rgba(255, 255, 255, 0.95);
+            color: #ff1493;
+        }
+
+        .sports-bottle .bottle-body {
+            width: 90px;
+            height: 160px;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.8), rgba(52, 144, 220, 0.6));
+            border-radius: 12px;
+        }
+
+        .sports-bottle .bottle-neck {
+            width: 35px;
+            height: 25px;
+            top: -25px;
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.9), rgba(52, 144, 220, 0.7));
+        }
+
+        .sports-bottle .bottle-label {
+            background: rgba(255, 255, 255, 0.95);
+            color: #28a745;
+        }
+
+        .luxury-bottle .bottle-body {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.8), rgba(147, 112, 219, 0.6));
+            border-radius: 25px 25px 5px 5px;
+        }
+
+        .luxury-bottle .bottle-label {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 193, 7, 0.7));
+            color: #fff;
+        }
+
+        .bottle-sample h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            background: linear-gradient(135deg, #ffffff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .bottle-features {
+            list-style: none;
+            margin: 1.5rem 0;
+            padding: 0;
+            text-align: left;
+        }
+
+        .bottle-features li {
+            color: #cccccc;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        .bottle-features li::before {
+            content: '✓';
+            color: #00d4ff;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .bottle-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00d4ff;
+            margin: 1rem 0;
+        }
+
+        .order-btn {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            position: relative; /* For ripple effect */
+            overflow: hidden; /* For ripple effect */
+        }
+
+        .order-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: radial-gradient(circle at 30% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(0, 153, 204, 0.1) 0%, transparent 50%),
+                        linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            color: #cccccc;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Floating Water Drops */
+        .water-drop {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.8), rgba(0, 153, 204, 0.6));
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+
+        /* Services Section */
+        .services {
+            padding: 100px 5%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #ffffff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #00d4ff;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .service-card p {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        /* Process Section */
+        .process {
+            padding: 100px 5%;
+            background: #0a0a0a;
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .step {
+            text-align: center;
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+            color: white;
+        }
+
+        .step h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .step p {
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        /* About Section */
+        .about {
+            padding: 100px 5%;
+            background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-text {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .about-text p {
+            color: #cccccc;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            opacity: 0;
+            transform: translateX(50px);
+        }
+
+        .stat {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #cccccc;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 100px 5%;
+            background: #0a0a0a;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #cccccc;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #ffffff;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            padding: 50px 5%;
+            background: #000000;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">sahilpani wala</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#samples">Products</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#process">Process</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Custom Water Bottles, Crafted for You</h1>
+            <p>Premium water bottle manufacturing with complete customization. We create personalized water solutions with your brand, minerals, pH levels, and packaging designed exactly for your business needs.</p>
+            <a href="#contact" class="cta-button">Start Your Journey</a>
+        </div>
+        
+        <div class="water-drop" style="width: 20px; height: 20px; top: 20%; left: 10%;"></div>
+        <div class="water-drop" style="width: 15px; height: 15px; top: 60%; left: 80%;"></div>
+        <div class="water-drop" style="width: 25px; height: 25px; top: 80%; left: 15%;"></div>
+        <div class="water-drop" style="width: 18px; height: 18px; top: 30%; left: 85%;"></div>
+        <div class="water-drop" style="width: 22px; height: 22px; top: 70%; left: 70%;"></div>
+    </section>
+
+    <section class="samples" id="samples">
+        <div class="container">
+            <h2 class="section-title">Custom Water Bottles for Parties & Events</h2>
+            <p style="text-align: center; color: #cccccc; font-size: 1.2rem; max-width: 800px; margin: 0 auto 2rem;">Perfect water bottle solutions for weddings, corporate events, parties, and special occasions. We manufacture custom branded bottles with personalized designs and premium water formulations.</p>
+            
+            <div class="samples-grid">
+                <div class="bottle-sample">
+                    <div class="bottle-visual wedding-bottle">
+                        <div class="bottle-body">
+                            <div class="bottle-neck"></div>
+                            <div class="bottle-cap"></div>
+                            <div class="bottle-label">💎</div>
+                            <div class="bottle-highlight"></div>
+                        </div>
+                    </div>
+                    <h3>Premium Wedding Collection</h3>
+                    <ul class="bottle-features">
+                        <li>Elegant Glass Bottles</li>
+                        <li>Custom Wedding Labels</li>
+                        <li>Premium Spring Water</li>
+                        <li>Personalized Messages</li>
+                        <li>Gift Box Packaging</li>
+                        <li>Minimum Order: 100 bottles</li>
+                    </ul>
+                    <div class="bottle-price">$3.25/bottle</div>
+                    <button class="order-btn">Request Quote</button>
+                </div>
+
+                <div class="bottle-sample">
+                    <div class="bottle-visual corporate-bottle">
+                        <div class="bottle-body">
+                            <div class="bottle-neck"></div>
+                            <div class="bottle-cap"></div>
+                            <div class="bottle-label">🏢</div>
+                            <div class="bottle-highlight"></div>
+                        </div>
+                    </div>
+                    <h3>Corporate Event Series</h3>
+                    <ul class="bottle-features">
+                        <li>Professional Branding</li>
+                        <li>500ml Premium Bottles</li>
+                        <li>Company Logo Design</li>
+                        <li>Alkaline Enhanced Water</li>
+                        <li>Bulk Order Discounts</li>
+                        <li>Minimum Order: 500 bottles</li>
+                    </ul>
+                    <div class="bottle-price">$1.85/bottle</div>
+                    <button class="order-btn">Request Quote</button>
+                </div>
+
+                <div class="bottle-sample">
+                    <div class="bottle-visual party-bottle">
+                        <div class="bottle-body">
+                            <div class="bottle-neck"></div>
+                            <div class="bottle-cap"></div>
+                            <div class="bottle-label">🎉</div>
+                            <div class="bottle-highlight"></div>
+                        </div>
+                    </div>
+                    <h3>Party & Celebration Line</h3>
+                    <ul class="bottle-features">
+                        <li>Colorful Custom Labels</li>
+                        <li>330ml Party Size</li>
+                        <li>Fun Event Themes</li>
+                        <li>Flavored Water Options</li>
+                        <li>Eco-Friendly Materials</li>
+                        <li>Minimum Order: 250 bottles</li>
+                    </ul>
+                    <div class="bottle-price">$1.45/bottle</div>
+                    <button class="order-btn">Request Quote</button>
+                </div>
+
+                <div class="bottle-sample">
+                    <div class="bottle-visual sports-bottle">
+                        <div class="bottle-body">
+                            <div class="bottle-neck"></div>
+                            <div class="bottle-cap"></div>
+                            <div class="bottle-label">⚽</div>
+                            <div class="bottle-highlight"></div>
+                        </div>
+                    </div>
+                    <h3>Sports & Fitness Events</h3>
+                    <ul class="bottle-features">
+                        <li>Sports Bottle Design</li>
+                        <li>750ml Large Capacity</li>
+                        <li>Electrolyte Enhanced</li>
+                        <li>Event Sponsor Logos</li>
+                        <li>Grip-Friendly Design</li>
+                        <li>Minimum Order: 300 bottles</li>
+                    </ul>
+                    <div class="bottle-price">$2.15/bottle</div>
+                    <button class="order-btn">Request Quote</button>
+                </div>
+
+                <div class="bottle-sample">
+                    <div class="bottle-visual luxury-bottle">
+                         <div class="bottle-body">
+                            <div class="bottle-neck"></div>
+                            <div class="bottle-cap"></div>
+                            <div class="bottle-label">👑</div>
+                            <div class="bottle-highlight"></div>
+                        </div>
+                    </div>
+                    <h3>Luxury VIP Collection</h3>
+                    <ul class="bottle-features">
+                        <li>Premium Glass Design</li>
+                        <li>Gold Foil Labels</li>
+                        <li>Artesian Spring Water</li>
+                        <li>Limited Edition Design</li>
+                        <li>Luxury Gift Packaging</li>
+                        <li>Minimum Order: 50 bottles</li>
+                    </ul>
+                    <div class="bottle-price">$4.95/bottle</div>
+                    <button class="order-btn">Request Quote</button>
+                </div>
+                 <div class="bottle-sample">
+                    <div class="bottle-visual">
+                         <div class="bottle-body">
+                            <div class="bottle-neck"></div>
+                            <div class="bottle-cap"></div>
+                            <div class="bottle-label">💧</div>
+                            <div class="bottle-highlight"></div>
+                        </div>
+                    </div>
+                    <h3>Classic Pure Water</h3>
+                    <ul class="bottle-features">
+                        <li>Standard PET Bottles</li>
+                        <li>Full-Color Custom Labels</li>
+                        <li>Purified Mineral Water</li>
+                        <li>Versatile for Any Event</li>
+                        <li>Recyclable Materials</li>
+                        <li>Minimum Order: 1000 bottles</li>
+                    </ul>
+                    <div class="bottle-price">$0.95/bottle</div>
+                    <button class="order-btn">Request Quote</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">Manufacturing Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🏭</div>
+                    <h3>Custom Manufacturing</h3>
+                    <p>Complete bottle manufacturing from concept to delivery. We handle water formulation, bottle design, labeling, and packaging for your brand.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🎨</div>
+                    <h3>Brand Design Services</h3>
+                    <p>Professional logo design, label creation, and brand identity development specifically for your custom water bottle products.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">⚗️</div>
+                    <h3>Water Formulation</h3>
+                    <p>Custom water composition with specific minerals, pH levels, electrolytes, and additives tailored to your target market and brand positioning.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">📦</div>
+                    <h3>Packaging Solutions</h3>
+                    <p>Custom packaging design, bulk shipping options, retail-ready displays, and branded cases for your water bottle products.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🔬</div>
+                    <h3>Quality Testing</h3>
+                    <p>Comprehensive quality control, water purity testing, safety certifications, and compliance with health regulations and standards.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🚚</div>
+                    <h3>Distribution Support</h3>
+                    <p>Logistics coordination, inventory management, and distribution network setup to get your custom water bottles to market efficiently.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="process" id="process">
+        <div class="container">
+            <h2 class="section-title">Our Manufacturing Process</h2>
+            <div class="process-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Consultation</h3>
+                    <p>We discuss your brand vision, target market, and specific requirements for your custom water bottles.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Design & Formulation</h3>
+                    <p>Our team creates your water formula, bottle design, and branding elements with your approval at each stage.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Production</h3>
+                    <p>State-of-the-art manufacturing facility produces your custom water bottles with strict quality control measures.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Delivery</h3>
+                    <p>Professional packaging and reliable delivery to your specified locations with full tracking and support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">Why Choose sahilpani wala</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Leading Water Bottle Manufacturer</h2>
+                    <p>For over a decade, sahilpani wala has been the premier manufacturer of custom water bottles for businesses worldwide. We specialize in creating unique branded water solutions that help companies stand out in the market.</p>
+                    <p>Our state-of-the-art manufacturing facility can produce everything from small batch custom orders to large-scale commercial production. We work with startups, corporations, event organizers, and health brands to create the perfect water bottle for their needs.</p>
+                    <p>From concept to delivery, we handle every aspect of your custom water bottle production with precision, quality, and attention to detail that sets us apart in the industry.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat">
+                        <div class="stat-number">500K+</div>
+                        <div class="stat-label">Bottles Produced</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">150+</div>
+                        <div class="stat-label">Brand Partners</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">99.8%</div>
+                        <div class="stat-label">Quality Rating</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">Day Turnaround</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">Start Your Custom Water Bottle Project</h2>
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="name">Company/Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Estimated Quantity</label>
+                    <input type="text" id="quantity" name="quantity" placeholder="e.g., 1000 bottles, 5000 bottles">
+                </div>
+                <div class="form-group">
+                    <label for="service">Product Interest</label>
+                    <input type="text" id="service" name="service" placeholder="e.g., Corporate Branded, Sports Line, Custom Formula">
+                </div>
+                <div class="form-group">
+                    <label for="message">Project Details</label>
+                    <textarea id="message" name="message" rows="5" placeholder="Tell us about your brand, target market, special requirements, timeline, and any other details about your custom water bottle project..."></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Request Manufacturing Quote</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 sahilpani wala. All rights reserved. | Custom Water Bottle Manufacturing</p>
+            <p>Contact: ceoprinceraj@gmail.com | 8102685851</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize GSAP and register plugins
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+        // --- GLOBAL ANIMATIONS ---
+
+        // Page load animations for Hero Section
+        gsap.timeline()
+            .to('.hero h1', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' })
+            .to('.hero p', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, '-=0.6')
+            .to('.cta-button', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.4');
+
+        // Enhanced floating animation for water drops
+        gsap.utils.toArray('.water-drop').forEach((drop, i) => {
+            gsap.to(drop, {
+                y: 'random(-60, 60)',
+                x: 'random(-40, 40)',
+                scale: 'random(0.7, 1.3)',
+                opacity: 'random(0.3, 0.8)',
+                duration: 'random(4, 8)',
+                ease: 'sine.inOut',
+                yoyo: true,
+                repeat: -1,
+                delay: i * 0.5
+            });
+        });
+
+        // Parallax effect for hero section
+        gsap.to('.hero-content', {
+            yPercent: -50,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: '.hero',
+                start: 'top top',
+                end: 'bottom top',
+                scrub: true
+            }
+        });
+
+        // Navbar background on scroll
+        ScrollTrigger.create({
+            start: 'top -80',
+            end: 99999,
+            toggleClass: { className: 'scrolled', targets: 'nav' }
+        });
+
+        // --- SCROLL-TRIGGERED ANIMATIONS ---
+
+        // Animate elements in as they enter the viewport
+        const animateOnScroll = (selector, props) => {
+            gsap.utils.toArray(selector).forEach((elem, i) => {
+                gsap.to(elem, {
+                    ...props,
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: 'top 85%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+        };
+
+        animateOnScroll('.bottle-sample', { opacity: 1, y: 0, rotateY: 0, duration: 1, ease: 'back.out(1.2)', stagger: 0.1 });
+        animateOnScroll('.service-card', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.1 });
+        animateOnScroll('.step', { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', stagger: 0.2 });
+        animateOnScroll('.about-text', { opacity: 1, x: 0, duration: 1, ease: 'power3.out' });
+        animateOnScroll('.about-stats', { opacity: 1, x: 0, duration: 1, ease: 'power3.out', delay: 0.3 });
+        animateOnScroll('.contact-form', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' });
+
+        // Counter animation for stats
+        gsap.utils.toArray('.stat-number').forEach(counter => {
+            const target = counter.textContent;
+            const isPercentage = target.includes('%');
+            const isPlus = target.includes('+');
+            const isK = target.includes('K');
+            
+            let endValue = parseFloat(target.replace(/[^0-9.]/g, ''));
+            if (isK) endValue *= 1000;
+
+            gsap.from(counter, {
+                textContent: 0,
+                duration: 2.5,
+                ease: "power3.out",
+                snap: { textContent: 1 },
+                scrollTrigger: {
+                    trigger: counter,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse",
+                },
+                onUpdate: function() {
+                    let num = Math.ceil(this.targets()[0].textContent);
+                    if (isK) {
+                        counter.textContent = Math.floor(num / 1000) + 'K' + (isPlus ? '+' : '');
+                    } else {
+                        counter.textContent = num + (isPercentage ? '%' : '') + (isPlus && !isK ? '+' : '');
+                    }
+                }
+            });
+        });
+
+        // --- EVENT LISTENERS & INTERACTIONS ---
+
+        // Enhanced bottle sample hover effects for CSS bottles
+        gsap.utils.toArray('.bottle-sample').forEach(sample => {
+            const visual = sample.querySelector('.bottle-visual');
+            const features = sample.querySelectorAll('.bottle-features li');
+            
+            sample.addEventListener('mouseenter', () => {
+                gsap.to(visual, { rotateY: 10, rotateX: 5, scale: 1.05, duration: 0.4, ease: 'back.out(1.7)' });
+                gsap.fromTo(features, { x: -10, opacity: 0.7 }, { x: 0, opacity: 1, duration: 0.3, stagger: 0.05, ease: 'power2.out' });
+            });
+            
+            sample.addEventListener('mouseleave', () => {
+                gsap.to(visual, { rotateY: 0, rotateX: 0, scale: 1, duration: 0.4, ease: 'power2.out' });
+                // Note: The features animation is not reversed on leave to maintain visibility.
+            });
+        });
+
+        // Service card hover effects
+        gsap.utils.toArray('.service-card').forEach(card => {
+            const icon = card.querySelector('.service-icon');
+            card.addEventListener('mouseenter', () => {
+                gsap.to(icon, { scale: 1.2, rotation: 15, duration: 0.5, ease: 'back.out(1.7)' });
+            });
+            card.addEventListener('mouseleave', () => {
+                gsap.to(icon, { scale: 1, rotation: 0, duration: 0.5, ease: 'back.out(1.7)' });
+            });
+        });
+
+        // Smooth scrolling for all anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                gsap.to(window, {
+                    duration: 1.5,
+                    scrollTo: { y: targetId, offsetY: 80 },
+                    ease: 'power3.inOut'
+                });
+            });
+        });
+
+        // Order button click scrolls to contact form
+        gsap.utils.toArray('.order-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                gsap.to(window, {
+                    duration: 1.5,
+                    scrollTo: { y: '#contact', offsetY: 80 },
+                    ease: 'power3.inOut'
+                });
+            });
+        });
+
+        // Form submission handling
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const successMsg = document.createElement('div');
+            successMsg.innerHTML = '<p style="color: #00d4ff; text-align: center; font-size: 1.2rem; margin-top: 20px;">Thank you! We\'ll send you a detailed manufacturing quote within 24 hours. Our team will contact you to discuss your custom water bottle project.</p>';
+            
+            this.parentNode.insertBefore(successMsg, this.nextSibling);
+            gsap.from(successMsg, { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out' });
+            
+            this.reset();
+            
+            setTimeout(() => {
+                gsap.to(successMsg, { 
+                    opacity: 0, y: -20, duration: 0.5, ease: 'power3.in',
+                    onComplete: () => successMsg.remove()
+                });
+            }, 5000);
+        });
+
+    </script>
+</body>
+</html>
